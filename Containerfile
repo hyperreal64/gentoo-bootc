@@ -6,11 +6,9 @@ RUN --mount=type=tmpfs,dst=/tmp emerge --sync --quiet && \
     echo -e 'FEATURES="-ipc-sandbox -network-sandbox -pid-sandbox"\nACCEPT_LICENSE="*"\nUSE="dracut nftables"' | tee -a /etc/portage/make.conf && \
     echo "sys-apps/systemd boot" | tee -a /etc/portage/package.use/systemd && \
     emerge --verbose --deep --newuse @world && \
-    emerge --verbose app-arch/cpio btrfs-progs dev-vcs/git dosfstools linux-firmware rust skopeo sys-kernel/gentoo-kernel-bin systemd && \
-    git clone https://github.com/EWouters/gentoo gentoo -b ostree --depth 1 --single-branch && \
-    cd gentoo && ebuild --debug dev-util/ostree/ostree-2025.6.ebuild clean install merge && \
+    emerge --verbose app-arch/cpio btrfs-progs dev-util/ostree dev-vcs/git dosfstools linux-firmware rust skopeo sys-kernel/gentoo-kernel-bin systemd && \
     git clone "https://github.com/bootc-dev/bootc.git" /tmp/bootc && \
-    make -C /tmp/bootc bin install-all install-initramfs-dracut && \
+    make -C /tmp/bootc bin install-all && \
     rm -rf /var/db
 
 RUN echo "$(basename "$(find /usr/lib/modules -maxdepth 1 -type d | grep -v -E "*.img" | tail -n 1)")" > kernel_version.txt && \
